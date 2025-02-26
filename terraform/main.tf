@@ -32,12 +32,13 @@ resource "aws_s3_bucket" "frontend_bucket" {
 }
 
 resource "aws_db_instance" "rds" {
-  allocated_storage = 20
-  engine            = "postgres"
-  instance_class    = "db.t3.micro"
-  username         = var.db_username
-  password         = var.db_password
-  skip_final_snapshot = true
+  allocated_storage    = 20
+  engine               = "postgres"
+  instance_class       = "db.t3.micro"
+  username             = var.db_username
+  password             = var.db_password
+  skip_final_snapshot  = true
+  deletion_protection  = true
 
   tags = {
     Name = "SecureVotingApp-DB"
