@@ -10,7 +10,7 @@ variable "instance_type" {
 
 variable "db_username" {
   description = "Database username"
-  default     = "admin"
+  default     = "apiuser"
 }
 
 variable "db_password" {
