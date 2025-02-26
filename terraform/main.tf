@@ -16,6 +16,12 @@ resource "aws_instance" "backend_server" {
               systemctl enable docker
               docker run -d -p 3000:3000 voting-app
               EOF
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+    http_put_response_hop_limit = 1
+  }
 }
 
 resource "aws_s3_bucket" "frontend_bucket" {
