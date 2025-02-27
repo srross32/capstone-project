@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "noImplicitAny": true,
+      "module": "ESNext",
+      "target": "es6",
+      "jsx": "react",
+      "allowJs": true,
+      "checkJs": false,
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "baseUrl": "./src",
+    },
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "**/*.config.js",
+      "**/.eslintrc.js",
+      "**/*.config.ts",
+      "index.d.ts",
+      "build.js",
+      "serve.mjs"
+    ],
+    "exclude": ["node_modules/**/*", "dist/**/*", "src/**/*.js", "src/**/*.jsx"],
+    "extends": "./node_modules/@tsconfig/recommended/tsconfig.json"
+  }
+  
+  
