@@ -51,7 +51,10 @@ jobs:
 
       - name: SSH into EC2 & Deploy
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_PUBLIC_IP }} << EOF
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_ssh_key.pem
+          sudo chmod 600 ~/.ssh/ec2_ssh_key.pem
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_ssh_key.pem ec2-user@${{ secrets.EC2_PUBLIC_IP }} << EOF
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/secure-voting-backend:latest
             docker stop $(docker ps -q) || true
             docker run -d -p 3000:3000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/secure-voting-backend:latest
