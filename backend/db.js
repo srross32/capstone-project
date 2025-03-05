@@ -1,5 +1,8 @@
-const pgp = require('pg-promise')();
-const env = require('dotenv').config();
+import pgpromise from 'pg-promise';
+import dotenv from 'dotenv';
+
+const pgp = pgpromise();
+const env = dotenv.config();
 if (env.error) {
   throw env.error;
 }
@@ -144,7 +147,8 @@ const getSession = async (token) => {
   return result;
 };
 
-module.exports = {
+export {
+  initDb,
   registerUser,
   loginUser,
   getUserById,
@@ -152,9 +156,8 @@ module.exports = {
   listCandidatesForState,
   voteForCandidate,
   getVotesForCandidate,
-  initDb,
   editCandidate,
   deleteCandidate,
   createSession,
   getSession
-};
+}

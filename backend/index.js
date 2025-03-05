@@ -1,8 +1,8 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 const app = express();
 app.use(cors());
