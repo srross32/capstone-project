@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+@use 'bulma/sass';
+
+html, body, #root {
+    height: 100vh;
+    overflow: hidden;
+}
+
+#app {
+    min-height: 100vh;
+    overflow: auto;
+    padding: 1.5rem;
+}

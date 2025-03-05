@@ -1,29 +1,47 @@
+data "aws_caller_identity" "current" {}
+locals {
+  account_id = data.aws_caller_identity.current.account_id
+}
+
+data "aws_ami" "ami_id" {
+  owners      = ["amazon"]
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023*-x86_64"]
+  }
+}
+
+resource "aws_iam_instance_profile" "ecr_profile" {
+  name = "ecr_profile"
+  role = "EC2ECR"
+}
+
 resource "aws_instance" "backend_server" {
-  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2 AMI
+  ami           = data.aws_ami.ami_id.id
   instance_type = var.instance_type
   key_name      = "capstone" # Change to your actual key pair name
   security_groups = [aws_security_group.backend_sg.name]
+  iam_instance_profile = aws_iam_instance_profile.ecr_profile.name
 
   tags = {
     Name = "SecureVotingApp-Backend"
   }
 
-  user_data = <<-EOF
-              #!/bin/bash
-              yum update -y
-              yum install docker -y
-              systemctl start docker
-              systemctl enable docker
-              $(aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 061039770229.dkr.ecr.us-east2.amazonaws.com)
-              docker pull 061039770229.dkr.ecr.us-east-2.amazonaws.com/secure-voting-backend:latest
-              docker run -d -p 3000:3000 061039770229.dkr.ecr.us-east-2.amazonaws.com/secure-voting-backend:latest
-              EOF
+  user_data_base64 = base64encode("${templatefile("ec2init.sh", {
+    account_id = local.account_id
+  })}")
 
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"
     http_put_response_hop_limit = 1
   }
+}
+
+resource "aws_eip" "backend_eip" {
+  instance = aws_instance.backend_server.id
 }
 
 resource "aws_s3_bucket" "frontend_bucket" {
@@ -95,6 +113,7 @@ resource "aws_db_instance" "rds" {
   password             = var.db_password
   skip_final_snapshot  = true
   deletion_protection  = true
+  vpc_security_group_ids = [aws_security_group.backend_sg.id]
 
   tags = {
     Name = "SecureVotingApp-DB"
