@@ -114,6 +114,7 @@ resource "aws_db_instance" "rds" {
   skip_final_snapshot  = true
   deletion_protection  = true
   vpc_security_group_ids = [aws_security_group.backend_sg.id]
+  db_name = "voting"
 
   tags = {
     Name = "SecureVotingApp-DB"
