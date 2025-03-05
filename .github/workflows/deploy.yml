@@ -55,6 +55,7 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_ssh_key.pem
           sudo chmod 600 ~/.ssh/ec2_ssh_key.pem
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_ssh_key.pem ec2-user@${{ secrets.EC2_PUBLIC_IP }} << EOF
+            $(aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com)
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/secure-voting-backend:latest
             docker stop $(docker ps -q) || true
             docker run -d -p 3000:3000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/secure-voting-backend:latest
