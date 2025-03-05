@@ -29,6 +29,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
+          echo "${{ secrets.BACKEND_ENV }}" > ./backend/.env
           docker build -t secure-voting-backend ./backend
           docker tag secure-voting-backend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/secure-voting-backend:latest
 
