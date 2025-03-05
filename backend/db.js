@@ -7,9 +7,12 @@ if (env.error) {
   throw env.error;
 }
 
-const db = pgp(
-  `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_LOCATION}:5432/voting`
-);
+const db = pgp({
+  connectionString: `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_LOCATION}:5432/voting`,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 const initDb = async () => {
   await db.none(`
