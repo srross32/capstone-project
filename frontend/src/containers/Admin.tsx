@@ -1,9 +1,13 @@
+import { useSelector } from '../store/hooks';
 import { useListCandidatesForStateQuery } from '../api';
 import React from 'react';
 
 const Admin: React.FC = () => {
     const [state, setState] = React.useState<string>('AL');
-    const { data, isFetching } = useListCandidatesForStateQuery({state});
+    const token = useSelector((state) => state.auth.token);
+    const { data, isFetching } = useListCandidatesForStateQuery({state}, {
+        skip: !token
+    });
 
     return (
         <div id='admin'>

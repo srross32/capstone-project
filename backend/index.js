@@ -39,7 +39,12 @@ const generateToken = (username, isAdmin) => {
 };
 
 app.use('/api', async (req, res, next) => {
-  const sessionToken = req.headers['Authorization'];
+  let sessionToken = req.headers['Authorization'];
+    if (!sessionToken) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
+    sessionToken = sessionToken.replace('Bearer ', '');
   const session = await getSession(sessionToken);
   if (!session) {
     res.status(401).json({ error: 'Unauthorized' });
