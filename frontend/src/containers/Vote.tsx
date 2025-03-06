@@ -23,8 +23,17 @@ const Vote: React.FC = () => {
           Admin
         </Link>
       )}
-      <div className="columns" id="vote">
-
+      <div className="columns is-multiline" id="vote">
+        {data?.map((candidate) => (
+            <div key={candidate.id} className="column is-one-third">
+                <div className="card">
+                    <div className="card-content">
+                    <p className="title">{candidate.name}</p>
+                    <p className="subtitle">{candidate.party}</p>
+                    </div>
+                </div>
+            </div>
+        ))}
       </div>
     </>
   );

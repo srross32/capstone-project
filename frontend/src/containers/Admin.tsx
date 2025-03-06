@@ -6,6 +6,7 @@ import {
   useListCandidatesForStateQuery
 } from '../api';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Admin: React.FC = () => {
   const [state, setState] = React.useState<string>('AL');
@@ -48,6 +49,9 @@ const Admin: React.FC = () => {
 
   return (
     <div id='admin'>
+      <Link className='button is-link' to="/" style={{ position: 'absolute', top: 20, left: 20 }}>
+        Back
+      </Link>
       <div className='box' style={{ minWidth: 400 }}>
         <div className='field'>
           <label className='label'>Current State</label>

@@ -112,10 +112,15 @@ app.get('/api/candidates/:state', async (req, res) => {
   res.json(candidates);
 });
 
-app.get('/api/votes/:candidateId', async (req, res) => {
-  const candidateId = parseInt(req.params.candidateId);
-  const votes = await getVotesForCandidate(candidateId);
-  res.json({ votes });
+app.get('/api/admin/winner/:state', async (req, res) => {
+    const state = req.params.state;
+    const candidates = await listCandidatesForState(state);
+    const votes = await Promise.all(candidates.map(async (candidate) => {
+        const votes = await getVotesForCandidate(candidate.id);
+        return { candidate, votes: votes.length };
+    }));
+    const winner = votes.reduce((acc, curr) => curr.votes > acc.votes ? curr : acc, { votes: 0 });
+    res.json(winner);
 });
 
 app.put('/api/admin/candidate/:id', async (req, res) => {
@@ -129,4 +134,11 @@ app.delete('/api/admin/candidate/:id', async (req, res) => {
   const candidateId = parseInt(req.params.id);
   await deleteCandidate(candidateId);
   res.json({ success: true });
+});
+
+app.post('/api/vote/:candidateId', async (req, res) => {
+    const { user_id } = req.session;
+    const candidateId = parseInt(req.params.candidateId);
+    await voteForCandidate(user_id, candidateId);
+    res.json({ success: true });
 });
