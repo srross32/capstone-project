@@ -41,12 +41,14 @@ const generateToken = (username, isAdmin) => {
 app.use('/api', async (req, res, next) => {
   let sessionToken = req.headers['Authorization'];
     if (!sessionToken) {
+        console.log("Could not find session token");
         res.status(401).json({ error: 'Unauthorized' });
         return;
     }
     sessionToken = sessionToken.replace('Bearer ', '');
   const session = await getSession(sessionToken);
   if (!session) {
+    console.log("Could not find session");
     res.status(401).json({ error: 'Unauthorized' });
     return;
   }
