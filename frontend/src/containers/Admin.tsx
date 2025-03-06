@@ -116,8 +116,8 @@ const Admin: React.FC = () => {
               <option value='WY'>Wyoming</option>
             </select>
           </div>
-          {winnerData?.candidate && (
-            <p>Current winner {winnerData.candidate?.name} with {winnerData.votes} votes</p>
+          {winnerData?.id && (
+            <p>Current winner {winnerData.name} with {winnerData.votes} votes</p>
           )}
           <hr />
           <h5 className='title is-5'>Candidates</h5>

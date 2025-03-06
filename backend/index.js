@@ -120,7 +120,6 @@ app.get('/api/admin/winner/:state', async (req, res) => {
         const votes = await getVotesForCandidate(candidate.id);
         return { ...candidate, votes };
     }));
-    console.log(votes);
     const winner = votes.reduce((acc, curr) => curr.votes > acc.votes ? curr : acc, { votes: 0 });
     res.json(winner);
 });

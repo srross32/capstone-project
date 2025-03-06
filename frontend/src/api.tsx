@@ -96,7 +96,7 @@ export const api = createApi({
         method: 'POST'
       })
     }),
-    getWinnerForState: builder.query<{ candidate?: { id: number; name: string; party: string}; votes: number }, { state: string }>({
+    getWinnerForState: builder.query<{ id: number; name: string; party: string; votes: number }, { state: string }>({
         query: ({ state }) => ({
             url: '/api/admin/winner/' + state,
             method: 'GET'

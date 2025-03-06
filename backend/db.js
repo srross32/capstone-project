@@ -58,14 +58,18 @@ const registerUser = async (username, password, idBytes, state) => {
         VALUES ($1, $2, $3, $4, $5)
         RETURNING id;
     `;
-  const result = await db.one(query, [
-    username,
-    password,
-    idBytes,
-    state,
-    username === 'admin'
-  ]);
-  return result.id;
+  try {
+    const result = await db.one(query, [
+      username,
+      password,
+      idBytes,
+      state,
+      username === 'admin'
+    ]);
+    return result.id;
+  } catch (e) {
+    return null;
+  }
 };
 
 const loginUser = async (username, password) => {
@@ -73,8 +77,12 @@ const loginUser = async (username, password) => {
         SELECT id FROM users
         WHERE username = $1 AND password = $2;
     `;
-  const result = await db.oneOrNone(query, [username, password]);
-  return result ? result.id : null;
+  try {
+    const result = await db.oneOrNone(query, [username, password]);
+    return result ? result.id : null;
+  } catch (e) {
+    return null;
+  }
 };
 
 const getUserById = async (id) => {
@@ -82,8 +90,12 @@ const getUserById = async (id) => {
         SELECT * FROM users
         WHERE id = $1;
     `;
-  const result = await db.oneOrNone(query, [id]);
-  return result;
+  try {
+    const result = await db.oneOrNone(query, [id]);
+    return result;
+  } catch (e) {
+    return null;
+  }
 };
 
 const createCandidate = async (candidateName, state, party) => {
@@ -92,8 +104,12 @@ const createCandidate = async (candidateName, state, party) => {
         VALUES ($1, $2, $3)
         RETURNING id;
     `;
-  const result = await db.one(query, [candidateName, state, party]);
-  return result.id;
+  try {
+    const result = await db.one(query, [candidateName, state, party]);
+    return result.id;
+  } catch (e) {
+    return null;
+  }
 };
 
 const listCandidatesForState = async (state) => {
@@ -101,8 +117,12 @@ const listCandidatesForState = async (state) => {
         SELECT * FROM candidates
         WHERE state = $1;
     `;
-  const result = await db.any(query, [state]);
-  return result;
+  try {  
+    const result = await db.any(query, [state]);
+    return result;
+  } catch (e) {
+    return null;
+  }
 };
 
 const voteForCandidate = async (userId, candidateId) => {
@@ -113,7 +133,7 @@ const voteForCandidate = async (userId, candidateId) => {
   try { 
     await db.none(query, [userId, candidateId]);
   } catch (e) {
-    return false;
+    return null;
   }
 };
 
@@ -122,8 +142,12 @@ const getVotesForCandidate = async (candidateId) => {
         SELECT COUNT(*) FROM votes
         WHERE candidate_id = $1;
     `;
-  const result = await db.one(query, [candidateId]);
-  return parseInt(result.count, 10);
+  try {
+    const result = await db.one(query, [candidateId]);
+    return parseInt(result.count, 10);
+  } catch (e) {
+    return null;
+  }
 };
 
 const editCandidate = async (candidateId, candidateName, state, party) => {
@@ -132,7 +156,11 @@ const editCandidate = async (candidateId, candidateName, state, party) => {
         SET name = $2, state = $3, party = $4
         WHERE id = $1;
     `;
-  await db.none(query, [candidateId, candidateName, state, party]);
+  try {
+    await db.none(query, [candidateId, candidateName, state, party]);
+  } catch (e) {
+    return null;
+  }
 };
 
 const deleteCandidate = async (candidateId) => {
@@ -140,7 +168,11 @@ const deleteCandidate = async (candidateId) => {
         DELETE FROM candidates
         WHERE id = $1;
     `;
-  await db.none(query, [candidateId]);
+  try {
+    await db.none(query, [candidateId]);
+  } catch (e) {
+    return null;
+  }
 };
 
 const createSession = async (user, token) => {
@@ -148,7 +180,11 @@ const createSession = async (user, token) => {
         INSERT INTO sessions (user_id, token)
         VALUES ($1, $2);
     `;
-  await db.none(query, [user, token]);
+  try {
+    await db.none(query, [user, token]);
+  } catch (e) {
+    return null;
+  }
 };
 
 const getSession = async (token) => {
@@ -156,8 +192,12 @@ const getSession = async (token) => {
         SELECT * FROM sessions
         WHERE token = $1;
     `;
-  const result = await db.oneOrNone(query, [token]);
-  return result;
+  try {
+    const result = await db.oneOrNone(query, [token]);
+    return result;
+  } catch (e) {
+    return null;
+  }
 };
 
 export {
