@@ -116,12 +116,9 @@ app.get('/api/candidates/:state', async (req, res) => {
 app.get('/api/admin/winner/:state', async (req, res) => {
     const state = req.params.state;
     const candidates = await listCandidatesForState(state);
-    const votes = await Promise.all(candidates.map((candidate) => {
-        return Promise((resolve) => {
-            getVotesForCandidate(candidate.id).then((votes) => {
-                resolve({ candidate, votes });
-            });
-        })
+    const votes = await Promise.all(candidates.map(async candidate => {
+        const votes = await getVotesForCandidate(candidate.id);
+        return { ...candidate, votes };
     }));
     console.log(votes);
     const winner = votes.reduce((acc, curr) => curr.votes > acc.votes ? curr : acc, { votes: 0 });
