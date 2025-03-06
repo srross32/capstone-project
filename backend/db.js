@@ -146,7 +146,7 @@ const getSession = async (token) => {
         SELECT * FROM sessions
         WHERE token = $1;
     `;
-  const result = await db.one(query, [token]);
+  const result = await db.oneOrNone(query, [token]);
   return result;
 };
 

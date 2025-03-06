@@ -31,27 +31,40 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
   endpoints: (builder) => ({
-    login: builder.mutation<{ token: string }, { username: string; password: string }>({
-        query: (body) => ({
-            url: '/login',
-            method: 'POST',
-            body
-        })
+    login: builder.mutation<
+      { token: string },
+      { username: string; password: string }
+    >({
+      query: (body) => ({
+        url: '/login',
+        method: 'POST',
+        body
+      })
     }),
-    register: builder.mutation<{ token: string }, { username: string; password: string; idBytes: string; state: string; }>({
-        query: (body) => ({
-            url: '/register',
-            method: 'POST',
-            body
-        })
+    register: builder.mutation<
+      { token: string },
+      { username: string; password: string; idBytes: string; state: string }
+    >({
+      query: (body) => ({
+        url: '/register',
+        method: 'POST',
+        body
+      })
     }),
-    listCandidatesForState: builder.mutation<{ id: number; name: string; party: string; }, { state: string }>({
-        query: (state) => ({
-            url: '/api/candidates/' + state,
-            method: 'GET'
-        })
-    }),
+    listCandidatesForState: builder.query<
+      { id: number; name: string; party: string },
+      { state: string }
+    >({
+      query: ({state}) => ({
+        url: '/api/candidates/' + state,
+        method: 'GET'
+      })
+    })
   })
 });
 
-export const { useLoginMutation, useRegisterMutation, useListCandidatesForStateMutation } = api;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useListCandidatesForStateQuery
+} = api;
