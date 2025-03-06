@@ -23,6 +23,7 @@ import Admin from './Admin';
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loggedIn = useSelector((state) => state.auth.token !== '');
 
   const LogoutEffect = () => {
     localStorage.removeItem('jwt');
@@ -47,13 +48,22 @@ const App: React.FC = () => {
   return (
     <div id='app'>
       <h1 className='title is-1 has-text-centered'>Voting Platform</h1>
+      {loggedIn && (
+        <button
+          className='button is-danger'
+          onClick={LogoutEffect}
+          style={{ position: 'absolute', top: 20, right: 20 }}
+        >
+          Logout
+        </button>
+      )}
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route element={<PrivateRoute />}>
           <Route path='/' element={<Vote />} />
           <Route element={<AdminRoute />}>
-            <Route path='/admin' element={<Admin/>} />
+            <Route path='/admin' element={<Admin />} />
           </Route>
         </Route>
       </Routes>

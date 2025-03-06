@@ -1,4 +1,4 @@
-import { useDispatch } from '../store/hooks';
+import { useDispatch, useSelector } from '../store/hooks';
 import { useLoginMutation } from '../api';
 import React from 'react';
 import { loginSuccess } from '../slices/auth';
@@ -10,8 +10,15 @@ const Login: React.FC = () => {
   const [error, setError] = React.useState<string>('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.token);
 
   const [loginMutation] = useLoginMutation();
+
+  React.useEffect(() => {
+    if (token) {
+      navigate('/');
+    }
+  }, [token]);
 
   const login = async () => {
     await loginMutation({ username, password })

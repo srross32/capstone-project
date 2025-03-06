@@ -8,12 +8,14 @@ export interface AuthToken {
   username: string;
   isAdmin: boolean;
   exp: number;
+  state: string;
 }
 
 interface AuthState {
   token: string;
   user: string;
   isAdmin: boolean;
+  state: string;
 }
 
 export interface LoginAction {
@@ -38,6 +40,7 @@ export const authSlice = createSlice({
       state.user = decoded.username;
       state.token = action.payload.token;
       state.isAdmin = decoded.isAdmin;
+      state.state = decoded.state;
       localStorage.setItem('jwt', action.payload.token);
     }
   },
@@ -100,7 +103,7 @@ export const decodeToken = (token: string): AuthToken => {
   try {
     return jwtDecode<AuthToken>(token);
   } catch {
-    return { username: '', isAdmin: false, exp: 0 };
+    return { username: '', isAdmin: false, exp: 0, state: '' };
   }
 };
 

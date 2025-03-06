@@ -34,17 +34,17 @@ app.listen(port, () => {
 // Generate random secret key, useful for this PoC project (and not having to manage the secret...)
 const secret = crypto.randomBytes(64).toString('hex');
 
-const generateToken = (username, isAdmin) => {
-  return jwt.sign({ username, isAdmin }, secret, { expiresIn: '1h' });
+const generateToken = (username, isAdmin, state) => {
+  return jwt.sign({ username, isAdmin, state }, secret, { expiresIn: '1h' });
 };
 
 app.use('/api', async (req, res, next) => {
   let sessionToken = req.headers['authorization'];
-    if (!sessionToken) {
-        res.status(401).json({ error: 'Unauthorized' });
-        return;
-    }
-    sessionToken = sessionToken.replace('Bearer ', '');
+  if (!sessionToken) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+  sessionToken = sessionToken.replace('Bearer ', '');
   const session = await getSession(sessionToken);
   if (!session) {
     res.status(401).json({ error: 'Unauthorized' });
@@ -76,7 +76,7 @@ app.post('/register', async (req, res) => {
     res.status(400).json({ error: 'User already exists' });
     return;
   }
-  const token = generateToken(username, false);
+  const token = generateToken(username, false, state);
   await createSession(userId, token);
   res.json({ token });
 });
@@ -89,7 +89,7 @@ app.post('/login', async (req, res) => {
     return;
   }
   const user = await getUserById(userId);
-  const token = generateToken(username, user.admin);
+  const token = generateToken(username, user.admin, user.state);
   await createSession(userId, token);
   res.json({ token });
 });

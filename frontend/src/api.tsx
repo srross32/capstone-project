@@ -55,16 +55,39 @@ export const api = createApi({
       { id: number; name: string; party: string }[],
       { state: string }
     >({
-      query: ({state}) => ({
+      query: ({ state }) => ({
         url: '/api/candidates/' + state,
         method: 'GET'
       })
     }),
-    addCandidate: builder.mutation<{id: number}, {candidateName: string; party: string; state: string}>({
+    addCandidate: builder.mutation<
+      { id: number },
+      { candidateName: string; party: string; state: string }
+    >({
       query: (body) => ({
         url: '/api/admin/candidate',
         method: 'POST',
         body
+      })
+    }),
+    deleteCandidate: builder.mutation<{ success: string }, { id: number }>({
+      query: ({ id }) => ({
+        url: '/api/admin/candidate/' + id,
+        method: 'DELETE'
+      })
+    }),
+    editCandidate: builder.mutation<
+      { success: string },
+      { id: number; candidateName: string; party: string; state: string }
+    >({
+      query: (body) => ({
+        url: '/api/admin/candidate/' + body.id,
+        method: 'PUT',
+        body: {
+          candidateName: body.candidateName,
+          party: body.party,
+          state: body.state
+        }
       })
     })
   })
@@ -74,5 +97,7 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useListCandidatesForStateQuery,
-    useAddCandidateMutation
+  useAddCandidateMutation,
+  useDeleteCandidateMutation,
+  useEditCandidateMutation
 } = api;

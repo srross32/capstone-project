@@ -58,7 +58,13 @@ const registerUser = async (username, password, idBytes, state) => {
         VALUES ($1, $2, $3, $4, $5)
         RETURNING id;
     `;
-  const result = await db.one(query, [username, password, idBytes, state, username === 'admin']);
+  const result = await db.one(query, [
+    username,
+    password,
+    idBytes,
+    state,
+    username === 'admin'
+  ]);
   return result.id;
 };
 
@@ -163,4 +169,4 @@ export {
   deleteCandidate,
   createSession,
   getSession
-}
+};
