@@ -89,6 +89,12 @@ export const api = createApi({
           state: body.state
         }
       })
+    }),
+    voteForCandidate: builder.mutation<{ success: string }, { id: number }>({
+      query: ({ id }) => ({
+        url: '/api/vote/' + id,
+        method: 'POST'
+      })
     })
   })
 });
@@ -99,5 +105,6 @@ export const {
   useListCandidatesForStateQuery,
   useAddCandidateMutation,
   useDeleteCandidateMutation,
-  useEditCandidateMutation
+  useEditCandidateMutation,
+  useVoteForCandidateMutation
 } = api;

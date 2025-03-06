@@ -22,7 +22,8 @@ import {
   editCandidate,
   deleteCandidate,
   createSession,
-  getSession
+  getSession,
+  voteForCandidate
 } from './db.js';
 
 app.listen(port, () => {
