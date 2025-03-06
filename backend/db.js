@@ -110,7 +110,11 @@ const voteForCandidate = async (userId, candidateId) => {
         INSERT INTO votes (user_id, candidate_id)
         VALUES ($1, $2);
     `;
-  await db.none(query, [userId, candidateId]);
+  try { 
+    await db.none(query, [userId, candidateId]);
+  } catch (e) {
+    return false;
+  }
 };
 
 const getVotesForCandidate = async (candidateId) => {

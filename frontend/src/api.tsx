@@ -95,6 +95,12 @@ export const api = createApi({
         url: '/api/vote/' + id,
         method: 'POST'
       })
+    }),
+    getWinnerForState: builder.query<{ candidate?: { id: number; name: string; party: string}; votes: number }, { state: string }>({
+        query: ({ state }) => ({
+            url: '/api/admin/winner/' + state,
+            method: 'GET'
+        })
     })
   })
 });
@@ -106,5 +112,6 @@ export const {
   useAddCandidateMutation,
   useDeleteCandidateMutation,
   useEditCandidateMutation,
-  useVoteForCandidateMutation
+  useVoteForCandidateMutation,
+  useGetWinnerForStateQuery
 } = api;

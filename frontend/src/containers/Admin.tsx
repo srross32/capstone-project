@@ -3,6 +3,7 @@ import {
   useAddCandidateMutation,
   useDeleteCandidateMutation,
   useEditCandidateMutation,
+  useGetWinnerForStateQuery,
   useListCandidatesForStateQuery
 } from '../api';
 import React from 'react';
@@ -17,6 +18,11 @@ const Admin: React.FC = () => {
       skip: !token
     }
   );
+
+  const { data: winnerData } = useGetWinnerForStateQuery({ state }, {
+    skip: !token
+  })
+
   const [editId, setEditId] = React.useState<number | null>(null);
 
   const [addMutation] = useAddCandidateMutation();
@@ -110,6 +116,9 @@ const Admin: React.FC = () => {
               <option value='WY'>Wyoming</option>
             </select>
           </div>
+          {winnerData?.candidate && (
+            <p>Current winner {winnerData.candidate?.name} with {winnerData.votes} votes</p>
+          )}
           <hr />
           <h5 className='title is-5'>Candidates</h5>
           {data?.map((candidate) => (
