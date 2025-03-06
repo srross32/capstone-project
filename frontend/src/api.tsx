@@ -52,12 +52,19 @@ export const api = createApi({
       })
     }),
     listCandidatesForState: builder.query<
-      { id: number; name: string; party: string },
+      { id: number; name: string; party: string }[],
       { state: string }
     >({
       query: ({state}) => ({
         url: '/api/candidates/' + state,
         method: 'GET'
+      })
+    }),
+    addCandidate: builder.mutation<{id: number}, {candidateName: string; party: string; state: string}>({
+      query: (body) => ({
+        url: '/api/admin/candidate',
+        method: 'POST',
+        body
       })
     })
   })
@@ -66,5 +73,6 @@ export const api = createApi({
 export const {
   useLoginMutation,
   useRegisterMutation,
-  useListCandidatesForStateQuery
+  useListCandidatesForStateQuery,
+    useAddCandidateMutation
 } = api;

@@ -41,14 +41,12 @@ const generateToken = (username, isAdmin) => {
 app.use('/api', async (req, res, next) => {
   let sessionToken = req.headers['authorization'];
     if (!sessionToken) {
-        console.log("Could not find session token");
         res.status(401).json({ error: 'Unauthorized' });
         return;
     }
     sessionToken = sessionToken.replace('Bearer ', '');
   const session = await getSession(sessionToken);
   if (!session) {
-    console.log("Could not find session");
     res.status(401).json({ error: 'Unauthorized' });
     return;
   }
@@ -96,38 +94,38 @@ app.post('/login', async (req, res) => {
   res.json({ token });
 });
 
-app.get('api/user/:id', async (req, res) => {
+app.get('/api/user/:id', async (req, res) => {
   const userId = parseInt(req.params.id);
   const user = await getUserById(userId);
   res.json(user);
 });
 
-app.post('api/admin/candidate', async (req, res) => {
+app.post('/api/admin/candidate', async (req, res) => {
   const { candidateName, state, party } = req.body;
   const candidateId = await createCandidate(candidateName, state, party);
   res.json({ candidateId });
 });
 
-app.get('api/candidates/:state', async (req, res) => {
+app.get('/api/candidates/:state', async (req, res) => {
   const state = req.params.state;
   const candidates = await listCandidatesForState(state);
   res.json(candidates);
 });
 
-app.get('api/votes/:candidateId', async (req, res) => {
+app.get('/api/votes/:candidateId', async (req, res) => {
   const candidateId = parseInt(req.params.candidateId);
   const votes = await getVotesForCandidate(candidateId);
   res.json({ votes });
 });
 
-app.put('api/admin/candidate/:id', async (req, res) => {
+app.put('/api/admin/candidate/:id', async (req, res) => {
   const candidateId = parseInt(req.params.id);
   const { candidateName, state, party } = req.body;
   await editCandidate(candidateId, candidateName, state, party);
   res.json({ success: true });
 });
 
-app.delete('api/admin/candidate/:id', async (req, res) => {
+app.delete('/api/admin/candidate/:id', async (req, res) => {
   const candidateId = parseInt(req.params.id);
   await deleteCandidate(candidateId);
   res.json({ success: true });
