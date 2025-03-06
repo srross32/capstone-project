@@ -6,7 +6,7 @@
     "build": "webpack build --config webpack.config.js --env env=production",
     "start": "webpack serve --config webpack.config.js --env env=development",
     "prettier": "prettier 'src/**/*.tsx' --write",
-    "lint": "eslint . --ext .tsx,.ts,.js,.jsx --fix"
+    "lint": "eslint . --fix"
   },
   "repository": {
     "type": "git",

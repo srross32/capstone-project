@@ -5,32 +5,28 @@ import { useSelector } from '../store/hooks';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 export interface AuthToken {
-    user: string;
-    session: string;
-    exp: number;
+  username: string;
+  isAdmin: boolean;
+  exp: number;
 }
 
 interface AuthState {
   token: string;
-  exp: number;
-  lastUpdated: number;
   user: string;
+  isAdmin: boolean;
 }
 
 export interface LoginAction {
   type: string;
   payload: {
-    user: string;
     token: string;
-    exp: number;
   };
 }
 
 const initialState = {
   user: '',
   token: '',
-  exp: 0,
-  lastUpdated: 0
+  isAdmin: false
 } as AuthState;
 
 export const authSlice = createSlice({
@@ -38,9 +34,10 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, action: LoginAction) => {
-      state.user = action.payload.user;
+      const decoded = decodeToken(action.payload.token);
+      state.user = decoded.username;
       state.token = action.payload.token;
-      state.exp = action.payload.exp;
+      state.isAdmin = decoded.isAdmin;
       localStorage.setItem('jwt', action.payload.token);
     }
   },
@@ -62,7 +59,7 @@ export const useAuth = () => {
   const auth = useSelector((state) => state.auth);
 
   React.useEffect(() => {
-    if (isValidToken(auth.exp)) {
+    if (isValidToken(decodeToken(auth.token).exp)) {
       setLoggedIn(true);
     } else {
       setLoggedIn(false);
@@ -103,7 +100,7 @@ export const decodeToken = (token: string): AuthToken => {
   try {
     return jwtDecode<AuthToken>(token);
   } catch {
-    return { user: '', exp: 0, session: '' };
+    return { username: '', isAdmin: false, exp: 0 };
   }
 };
 

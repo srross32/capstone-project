@@ -3,17 +3,16 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { authRejectionMiddleware } from './authMiddleware';
 
 import authSlice from '../slices/auth';
+import { api } from '../api';
 
-const plugins = [
-  authRejectionMiddleware
-];
+const plugins = [authRejectionMiddleware, api.middleware];
 
 const store = configureStore({
   reducer: {
-    auth: authSlice
+    auth: authSlice,
+    [api.reducerPath]: api.reducer
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(plugins)
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(plugins)
 });
 setupListeners(store.dispatch);
 

@@ -54,11 +54,11 @@ const initDb = async () => {
 
 const registerUser = async (username, password, idBytes, state) => {
   const query = `
-        INSERT INTO users (username, password, id_bytes, state)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO users (username, password, id_bytes, state, admin)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING id;
     `;
-  const result = await db.one(query, [username, password, idBytes, state]);
+  const result = await db.one(query, [username, password, idBytes, state, username === 'admin']);
   return result.id;
 };
 

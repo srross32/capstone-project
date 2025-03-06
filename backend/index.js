@@ -61,6 +61,11 @@ app.use('/api/admin', async (req, res, next) => {
 
 app.post('/register', async (req, res) => {
   const { username, password, idBytes, state } = req.body;
+  if (!username || !password || !idBytes || !state) {
+    res.status(400).json({ error: 'Missing required fields' });
+    return;
+  }
+
   const userId = await registerUser(username, password, idBytes, state);
   if (!userId) {
     res.status(400).json({ error: 'User already exists' });
