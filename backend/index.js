@@ -39,7 +39,7 @@ const generateToken = (username, isAdmin) => {
 };
 
 app.use('/api', async (req, res, next) => {
-  let sessionToken = req.headers['Authorization'];
+  let sessionToken = req.headers['authorization'];
     if (!sessionToken) {
         console.log("Could not find session token");
         res.status(401).json({ error: 'Unauthorized' });
