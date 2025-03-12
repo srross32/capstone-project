@@ -3,13 +3,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import selfsigned from 'selfsigned';
-import https from 'https';
-
-const attrs = [{ name: 'commonName', value: 'localhost' }];
-const pems = selfsigned.generate(attrs, { keySize: 2048, days: 30 });
-const cert = pems.cert;
-
 
 const app = express();
 app.use(cors());
@@ -33,17 +26,11 @@ import {
   voteForCandidate
 } from './db.js';
 
-// app.listen(port, () => {
-//   console.log(`Server listening on port ${port}`);
-
-//   initDb();
-// });
-
-https.createServer({ key: pems.private, cert }, app).listen(port, () => {
+app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 
   initDb();
-})
+});
 
 
 // Generate random secret key, useful for this PoC project (and not having to manage the secret...)

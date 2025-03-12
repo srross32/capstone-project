@@ -7,7 +7,7 @@ import {
 import { fetchBaseQuery } from '@reduxjs/toolkit/query';
 import { RootState } from './store/store';
 
-const baseUrl = 'https://3.132.230.10:3000';
+const baseUrl = 'http://3.132.230.10:3000';
 
 const dynamicBaseQuery: BaseQueryFn<
   string | FetchArgs,
